@@ -1,3 +1,7 @@
+using LTraceFilter.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
 namespace LTraceFilter.Presentation.WinForms
 {
     internal static class Program
@@ -8,10 +12,16 @@ namespace LTraceFilter.Presentation.WinForms
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            var hostBuilder = new HostBuilder();
+
+            hostBuilder.ConfigureServices(services => {
+                services.ConfigureDI();
+            });
+
+            var host = hostBuilder.Build();
+
             ApplicationConfiguration.Initialize();
-            Application.Run(new MainForm());
+            Application.Run(host.Services.GetRequiredService<MainForm>());
         }
     }
 }
