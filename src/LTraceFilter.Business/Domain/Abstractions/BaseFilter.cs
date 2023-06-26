@@ -1,6 +1,5 @@
 ﻿/*anticorruption layer for 3rd party lib: Accord*/
 using Accord.Audio;
-using LTraceFilter.Business.Core;
 
 using AccordLib = Accord.Audio.Filters;
 
