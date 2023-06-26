@@ -1,4 +1,4 @@
-﻿namespace LTraceFilter.Business.Core
+﻿namespace LTraceFilter.Business.Domain
 {
     public static class MemoryStreamExtensions
     {
