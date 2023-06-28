@@ -1,6 +1,6 @@
 using LTraceFilter.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LTraceFilter.Presentation.WinForms
 {
@@ -14,8 +14,10 @@ namespace LTraceFilter.Presentation.WinForms
         {
             var hostBuilder = new HostBuilder();
 
-            hostBuilder.ConfigureServices(services => {
-                services.ConfigureDI();
+            hostBuilder.ConfigureAppSettings();
+
+            hostBuilder.ConfigureServices((hostContext, services) => {
+                services.ConfigureDI(hostContext.Configuration);
             });
 
             var host = hostBuilder.Build();

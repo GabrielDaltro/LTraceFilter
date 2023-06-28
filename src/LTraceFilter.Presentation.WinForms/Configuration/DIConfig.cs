@@ -6,13 +6,21 @@ using LTraceFilter.Presentation.WinForms;
 using LTraceFilter.Presentation.WinForms.Presenters;
 using LTraceFilter.Presentation.WinForms.Views;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 namespace LTraceFilter.Configuration
 {
     internal static class DIConfig
     {
-        public static IServiceCollection ConfigureDI(this IServiceCollection services)
+        public static IServiceCollection ConfigureDI(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddSingleton<IFilterSettingsRepository>(services => {
+                var path = configuration.GetSection("PathConfigurations")["filterSettingsPath"];
+                if (path == null)
+                    throw new Exception("Error to read path configurations from appsettings.json");
+                return new FilterSettingsRepository(path);
+            });
+            
             services.AddTransient<ISignalRepository, SignalRepository>();
             services.AddTransient<FilterFactory>();
             services.AddTransient<ViewFactory>();

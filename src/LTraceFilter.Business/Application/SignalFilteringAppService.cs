@@ -8,19 +8,23 @@ namespace LTraceFilter.Business.Application
     public class SignalFilteringAppService
     {
         private float[]? signal;
-        private int samplingRate; 
+        private int samplingRate;
 
-        private readonly ISignalRepository signalRepository;
         private readonly FilterFactory filterFactory;
+        private readonly ISignalRepository signalRepository;
+        private readonly IFilterSettingsRepository filterSettingsRepository;
         
         private BandPassFilter? bandPassFilter;
         private ILowPassFilter? lowPassFilter;
         private IHighPassFilter? highPassFilter;
 
-        public SignalFilteringAppService(ISignalRepository signalRepository, FilterFactory filterFactory)
+        public SignalFilteringAppService(ISignalRepository signalRepository, 
+                                         FilterFactory filterFactory,
+                                         IFilterSettingsRepository filterSettingsRepository)
         {
             this.signalRepository = signalRepository;
             this.filterFactory = filterFactory;
+            this.filterSettingsRepository = filterSettingsRepository;
         }
 
         // essa função é realmente necessária?
@@ -33,6 +37,8 @@ namespace LTraceFilter.Business.Application
         {
             if (signal == null)
                 throw new Exception("It is need to call LoadSignal method before calling FilterSignal method.");
+
+            filterSettingsRepository.SetBothCutoffFrequency(lowPassCutoffFrequency, highPassCutoffFrequency);
 
             if (lowPassCutoffFrequency == null && highPassCutoffFrequency == null)
                 return signal;

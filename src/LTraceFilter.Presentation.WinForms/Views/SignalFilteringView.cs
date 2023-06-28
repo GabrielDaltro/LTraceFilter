@@ -14,14 +14,12 @@ namespace LTraceFilter.Presentation.WinForms.Views
         {
             this.presenter = presenter;
             InitializeComponent();
-            Init();
+            (float? initialLowPassCutoff, float? initialHighPassCutoff) = presenter.GetInitialFilterSettings();
+            Init(initialLowPassCutoff, initialHighPassCutoff);
         }
 
-        private void Init()
+        private void Init(float? initialLowPassCutoff, float? initialHighPassCutoff)
         {
-            int initialLowPassCutoff = 12;
-            int initialHighPassCutoff = 26;
-
             DisableGridOfPlot();
             SetAxisLabels();
             EnablePlotLegend();
@@ -53,7 +51,14 @@ namespace LTraceFilter.Presentation.WinForms.Views
                 return;
             }
             else
+            {
+                if (lowPassValue == 0)
+                {
+                    // exibir valor inviável
+                    return;
+                }
                 initialLowPassCutoff = lowPassValue;
+            }
 
 
 
@@ -67,7 +72,14 @@ namespace LTraceFilter.Presentation.WinForms.Views
                 return;
             }
             else
+            {
+                if (highPassValue == 0)
+                {
+                    // exibir valor inviável
+                    return;
+                }
                 initialHighPassCutoff = highPassValue;
+            }
 
             float[] signal = presenter.FilterSignal(initialLowPassCutoff, initialHighPassCutoff);
             UpdateFilteredSignal(signal);
