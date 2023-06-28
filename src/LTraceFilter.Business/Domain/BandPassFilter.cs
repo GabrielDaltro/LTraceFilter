@@ -2,7 +2,7 @@
 
 namespace LTraceFilter.Business.Domain
 {
-    internal class BandPassFilter : BasePipeline<float>
+    public class BandPassFilter : BasePipeline<float>
     {
         private readonly ILowPassFilter lowPassFilter;
         private readonly IHighPassFilter highPassFilter;

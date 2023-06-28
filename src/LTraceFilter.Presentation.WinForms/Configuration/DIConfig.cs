@@ -1,4 +1,7 @@
-﻿using LTraceFilter.Business.Application;
+﻿using LTraceFilter.Data;
+using LTraceFilter.Business.Application;
+using LTraceFilter.Business.Application.Abstractions;
+using LTraceFilter.Business.Domain.Factory;
 using LTraceFilter.Presentation.WinForms;
 using LTraceFilter.Presentation.WinForms.Presenters;
 using LTraceFilter.Presentation.WinForms.Views;
@@ -10,6 +13,8 @@ namespace LTraceFilter.Configuration
     {
         public static IServiceCollection ConfigureDI(this IServiceCollection services)
         {
+            services.AddTransient<ISignalRepository, SignalRepository>();
+            services.AddTransient<FilterFactory>();
             services.AddTransient<ViewFactory>();
             services.AddTransient<SignalFilteringAppService>();
             services.AddSingleton<SignalFilteringPresenter>();

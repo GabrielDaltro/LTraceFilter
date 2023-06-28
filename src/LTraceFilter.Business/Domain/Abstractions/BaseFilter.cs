@@ -40,18 +40,22 @@ namespace LTraceFilter.Business.Domain.Abstractions
 
         public BaseFilter(double cutoffFrequency, int samplingRate, Tfilter wrappedFilter)
         {
-            CutoffFrequency = cutoffFrequency;
-            SamplingRate = samplingRate;
             this.wrappedFilter = wrappedFilter;
+            this.cutoffFrequency = cutoffFrequency;
+            this.samplingRate = samplingRate;
         }
 
         public float[] Apply(float[] inputSignal)
         {
-            var result = wrappedFilter.Apply(MapToSignal(inputSignal));
-            return MapToFloatArray(result);
+            Signal result = wrappedFilter.Apply(MapToSignal(inputSignal));
+            var arrayResult = result.ToFloat();
+            result.Dispose();
+            return arrayResult;
         }
 
         protected abstract void SetAlpha(double cutoffFrequency, int sampleRate);
+
+        protected abstract void SetAlpha(float alpha);
 
         private Signal MapToSignal(float[] inputSignal)
         {

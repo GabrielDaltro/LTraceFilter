@@ -1,6 +1,6 @@
 ﻿namespace LTraceFilter.Business.Domain.Abstractions
 {
-    internal abstract class BasePipeline<T> : IPipeline<T>
+    public abstract class BasePipeline<T> : IPipeline<T>
     {
         private readonly List<IFilter<T>> filters;
 

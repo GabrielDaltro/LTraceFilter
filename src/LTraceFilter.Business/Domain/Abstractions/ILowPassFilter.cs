@@ -1,4 +1,4 @@
 ﻿namespace LTraceFilter.Business.Domain.Abstractions
 {
-    internal interface ILowPassFilter : IFilter<float>{}
+    public interface ILowPassFilter : IFilter<float>{}
 }

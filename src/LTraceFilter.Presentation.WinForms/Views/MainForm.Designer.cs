@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             BasePanel = new Panel();
             SuspendLayout();
             // 
@@ -36,7 +37,7 @@
             BasePanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             BasePanel.Location = new Point(12, 12);
             BasePanel.Name = "BasePanel";
-            BasePanel.Size = new Size(776, 426);
+            BasePanel.Size = new Size(760, 537);
             BasePanel.TabIndex = 0;
             // 
             // MainForm
@@ -44,10 +45,13 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(784, 561);
             Controls.Add(BasePanel);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximumSize = new Size(800, 600);
+            MinimumSize = new Size(800, 600);
             Name = "MainForm";
-            Text = "Form1";
+            Text = "LTrace Filter";
             Load += MainForm_Load;
             ResumeLayout(false);
         }

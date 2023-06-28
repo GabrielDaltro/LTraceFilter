@@ -1,6 +1,6 @@
 ﻿namespace LTraceFilter.Business.Domain.Abstractions
 {
-    internal interface IFilter<T>
+    public interface IFilter<T>
     {
         double CutoffFrequency { get; set; }
 

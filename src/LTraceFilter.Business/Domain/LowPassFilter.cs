@@ -16,5 +16,10 @@ namespace LTraceFilter.Business.Domain
         {
             wrappedFilter.Alpha = AccordLib.LowPassFilter.GetAlpha(cutoffFrequency, sampleRate);
         }
+
+        protected override void SetAlpha(float alpha)
+        {
+            wrappedFilter.Alpha = 1;
+        }
     }
 }
