@@ -189,5 +189,18 @@ namespace LTraceFilter.Presentation.WinForms.Views
                     UpdateFilteredSignal(filteredSignal, sampleRate);
             }).Show();
         }
+
+        private void ExportarResultadoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "JPeg Image|*.jpg";
+            saveFileDialog1.Title = "Salvar gráfico";
+            saveFileDialog1.ShowDialog();
+
+            if (saveFileDialog1.FileName != "") 
+            {
+                Plot.Plot.SaveFig(saveFileDialog1.FileName);
+            }
+        }
     }
 }

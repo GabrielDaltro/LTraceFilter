@@ -36,6 +36,7 @@
             menuStrip1 = new MenuStrip();
             menuToolStripMenuItem = new ToolStripMenuItem();
             ImportarSinalToolStripMenuItem = new ToolStripMenuItem();
+            exportarResultadoToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -96,7 +97,7 @@
             // 
             // menuToolStripMenuItem
             // 
-            menuToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ImportarSinalToolStripMenuItem });
+            menuToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ImportarSinalToolStripMenuItem, exportarResultadoToolStripMenuItem });
             menuToolStripMenuItem.Name = "menuToolStripMenuItem";
             menuToolStripMenuItem.Size = new Size(50, 20);
             menuToolStripMenuItem.Text = "Menu";
@@ -107,6 +108,13 @@
             ImportarSinalToolStripMenuItem.Size = new Size(180, 22);
             ImportarSinalToolStripMenuItem.Text = "Importar Sinal";
             ImportarSinalToolStripMenuItem.Click += ImportarSinalToolStripMenuItem_Click;
+            // 
+            // exportarResultadoToolStripMenuItem
+            // 
+            exportarResultadoToolStripMenuItem.Name = "exportarResultadoToolStripMenuItem";
+            exportarResultadoToolStripMenuItem.Size = new Size(180, 22);
+            exportarResultadoToolStripMenuItem.Text = "Exportar Resultado";
+            exportarResultadoToolStripMenuItem.Click += ExportarResultadoToolStripMenuItem_Click;
             // 
             // SignalFilteringView
             // 
@@ -137,5 +145,6 @@
         private MenuStrip menuStrip1;
         private ToolStripMenuItem menuToolStripMenuItem;
         private ToolStripMenuItem ImportarSinalToolStripMenuItem;
+        private ToolStripMenuItem exportarResultadoToolStripMenuItem;
     }
 }
