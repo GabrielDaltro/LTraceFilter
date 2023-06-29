@@ -40,7 +40,12 @@ namespace LTraceFilter.Data
 
         public void SetLowPassCutoffFrequency(float? frequency)
         {
-            throw new NotImplementedException();
+            var dto = new FilterSettingsDto()
+            {
+                LowCutoffFrequency = frequency,
+                HighCutoffFrequency = GetHighPassCutoffFrequency()
+            };
+            SaveIntoFile(dto);
         }
     }
 }

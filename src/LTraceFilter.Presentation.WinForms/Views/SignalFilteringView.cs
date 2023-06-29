@@ -18,6 +18,24 @@ namespace LTraceFilter.Presentation.WinForms.Views
             Init(initialLowPassCutoff, initialHighPassCutoff);
         }
 
+        public string GetSignalPath()
+        {
+            var filePath = string.Empty;
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.Filter = "txt files (*.txt)|*.txt";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    filePath = openFileDialog.FileName;
+                }
+            }
+            return filePath;
+        }
+
         private void Init(float? initialLowPassCutoff, float? initialHighPassCutoff)
         {
             DisableGridOfPlot();
@@ -29,8 +47,9 @@ namespace LTraceFilter.Presentation.WinForms.Views
 
             HighCutoffTextBox.Text = initialHighPassCutoff.ToString();
 
-            float[] signal = presenter.FilterSignal(initialLowPassCutoff, initialHighPassCutoff);
-            UpdateFilteredSignal(signal);
+            (float[]? signal, int? sampleRate) = presenter.FilterSignal(initialLowPassCutoff, initialHighPassCutoff);
+            if (signal != null && sampleRate != null)
+                UpdateFilteredSignal(signal, sampleRate.Value);
 
             LowCutoffTextBox.TextChanged += LowOrHighCutoffTextBox_TextChanged;
             HighCutoffTextBox.TextChanged += LowOrHighCutoffTextBox_TextChanged;
@@ -47,20 +66,18 @@ namespace LTraceFilter.Presentation.WinForms.Views
             }
             else if (!int.TryParse(LowCutoffTextBox.Text, out int lowPassValue))
             {
-                // exibir valor inviável
+                // TO DO: exibir valor inviável
                 return;
             }
             else
             {
                 if (lowPassValue == 0)
                 {
-                    // exibir valor inviável
+                    // TO DO: exibir valor inviável
                     return;
                 }
                 initialLowPassCutoff = lowPassValue;
             }
-
-
 
             if (string.IsNullOrEmpty(HighCutoffTextBox.Text))
             {
@@ -68,35 +85,43 @@ namespace LTraceFilter.Presentation.WinForms.Views
             }
             else if (!int.TryParse(HighCutoffTextBox.Text, out int highPassValue))
             {
-                // exibir valor inviável
+                // TO DO: exibir valor inviável
                 return;
             }
             else
             {
                 if (highPassValue == 0)
                 {
-                    // exibir valor inviável
+                    // TO DO: exibir valor inviável
                     return;
                 }
                 initialHighPassCutoff = highPassValue;
             }
 
-            float[] signal = presenter.FilterSignal(initialLowPassCutoff, initialHighPassCutoff);
-            UpdateFilteredSignal(signal);
+            (float[]? signal, int? sampleRate) = presenter.FilterSignal(initialLowPassCutoff, initialHighPassCutoff);
+            if (signal != null && sampleRate != null)
+                UpdateFilteredSignal(signal, sampleRate.Value);
         }
 
         private void AddRawSignal()
         {
+            if (rawSignalPlot != null)
+            {
+                Plot.Plot.Remove(rawSignalPlot);
+                Plot.Refresh();
+            }
+
             (var signal, var sampleRateHz) = presenter.GetSignal();
-            rawSignalPlot = PlotSignal(signal, sampleRateHz, "Sísmica Original", Color.Black);
+            if (signal == null || sampleRateHz == null)
+                return;
+            rawSignalPlot = PlotSignal(signal, sampleRateHz.Value, "Sísmica Original", Color.Black);
         }
 
-        private void UpdateFilteredSignal(float[] filteredSignal)
+        private void UpdateFilteredSignal(float[] filteredSignal, int sampleRate)
         {
             Plot.Plot.Remove(filteredSignalPlot);
             Plot.Refresh();
-            // remover magic number
-            filteredSignalPlot = PlotSignal(filteredSignal, 250, "Sísmica Filtrada", Color.Blue);
+            filteredSignalPlot = PlotSignal(filteredSignal, sampleRate, "Sísmica Filtrada", Color.Blue);
         }
 
         private ScatterPlot PlotSignal(float[] signal, int sampleRateHz, string label, Color? color = null)
@@ -140,6 +165,29 @@ namespace LTraceFilter.Presentation.WinForms.Views
                 timeAxis[i] = i * samplingPeriod * 1000;
             }
             return timeAxis;
+        }
+
+        private void ImportarSinalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var path = GetSignalPath();
+            if (string.IsNullOrEmpty(path))
+                return;
+
+            new SampleRateForm(okClickCallback: (int sampleRate) =>
+            {
+                var signal = presenter.ReadNewSignalFromSourceFile(path);
+                if (signal == null)
+                {
+                    MessageBox.Show("Erro ao carregar sinal", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                presenter.SaveImportedSignal(signal, sampleRate);
+                AddRawSignal();
+                (float? initialLowPassCutoff, float? initialHighPassCutoff) = presenter.GetInitialFilterSettings();
+                (float[]? filteredSignal, _) = presenter.FilterSignal(initialLowPassCutoff, initialHighPassCutoff);
+                if (filteredSignal != null)
+                    UpdateFilteredSignal(filteredSignal, sampleRate);
+            }).Show();
         }
     }
 }

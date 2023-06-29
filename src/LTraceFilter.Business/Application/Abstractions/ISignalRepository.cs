@@ -2,6 +2,8 @@
 {
     public interface ISignalRepository
     {
-        (float[], int) GetSignal();
+        (float[]?, int?) GetSignal();
+
+        void UpdateSignal(float[] newSignal, int sampleRate);
     }
 }

@@ -20,11 +20,19 @@ namespace LTraceFilter.Configuration
                     throw new Exception("Error to read path configurations from appsettings.json");
                 return new FilterSettingsRepository(path);
             });
-            
-            services.AddTransient<ISignalRepository, SignalRepository>();
+
+            services.AddTransient<ISignalReader, SignalReader>();
+
+            services.AddTransient<ISignalRepository>(services => {
+                var path = configuration.GetSection("PathConfigurations")["SignalPersistencePath"];
+                if (path == null)
+                    throw new Exception("Error to read signal persistence path from appsettings.json");
+                return new SignalRepository(path);
+            });
             services.AddTransient<FilterFactory>();
             services.AddTransient<ViewFactory>();
             services.AddTransient<SignalFilteringAppService>();
+            
             services.AddSingleton<SignalFilteringPresenter>();
             services.AddSingleton<MainPresenter>();
             services.AddSingleton<SignalFilteringView>();

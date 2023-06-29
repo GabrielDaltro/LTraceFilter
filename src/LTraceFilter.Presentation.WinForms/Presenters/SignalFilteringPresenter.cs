@@ -18,7 +18,7 @@ namespace LTraceFilter.Presentation.WinForms.Presenters
             this.filterSettingsRepository = filterSettingsRepository;
         }
 
-        public (float[] signal, int sampleRateHz) GetSignal()
+        public (float[]? signal, int? sampleRateHz) GetSignal()
         {
             return signalRepository.GetSignal();
         }
@@ -28,10 +28,20 @@ namespace LTraceFilter.Presentation.WinForms.Presenters
             return (filterSettingsRepository.GetLowPassCutoffFrequency(), filterSettingsRepository.GetHighPassCutoffFrequency());
         }
 
-        public float[] FilterSignal(float? lowPassCutoffFrequency, float? highPassCutoffFrequency)
+        public (float[]? signal, int? sampleRate) FilterSignal(float? lowPassCutoffFrequency, float? highPassCutoffFrequency)
         {
             appService.LoadSignal();
             return appService.FilterSignal(lowPassCutoffFrequency, highPassCutoffFrequency);
+        }
+
+        public float[]? ReadNewSignalFromSourceFile(string path)
+        {
+            return appService.ImportNewSignal(path);
+        }
+
+        public void SaveImportedSignal(float[] newSignal, int sampleRate)
+        {
+            appService.PersisteNewSignal(newSignal, sampleRate);
         }
     }
 }

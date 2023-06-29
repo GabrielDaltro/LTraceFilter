@@ -16,7 +16,6 @@ namespace LTraceFilter.Business.Domain.Factory
             var accordHighFilter = new Accord.Audio.Filters.HighPassFilter(highCutoffFrequency, samplingRate);
             IHighPassFilter highPassFilter = new HighPassFilter(highCutoffFrequency, samplingRate, accordHighFilter);
             return highPassFilter;
-
         }
 
         public BandPassFilter CreateBandPassFilter(double lowCutoffFrequency, double highCutoffFrequency, int samplingRate)

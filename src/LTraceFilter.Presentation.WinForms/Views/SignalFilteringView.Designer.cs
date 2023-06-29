@@ -33,6 +33,10 @@
             LowCutoffTextBox = new TextBox();
             HighCutoffTextBox = new TextBox();
             Plot = new ScottPlot.FormsPlot();
+            menuStrip1 = new MenuStrip();
+            menuToolStripMenuItem = new ToolStripMenuItem();
+            ImportarSinalToolStripMenuItem = new ToolStripMenuItem();
+            menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // LowCutoffHzLabel
@@ -81,6 +85,29 @@
             Plot.Size = new Size(402, 503);
             Plot.TabIndex = 4;
             // 
+            // menuStrip1
+            // 
+            menuStrip1.Items.AddRange(new ToolStripItem[] { menuToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(800, 24);
+            menuStrip1.TabIndex = 5;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // menuToolStripMenuItem
+            // 
+            menuToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ImportarSinalToolStripMenuItem });
+            menuToolStripMenuItem.Name = "menuToolStripMenuItem";
+            menuToolStripMenuItem.Size = new Size(50, 20);
+            menuToolStripMenuItem.Text = "Menu";
+            // 
+            // ImportarSinalToolStripMenuItem
+            // 
+            ImportarSinalToolStripMenuItem.Name = "ImportarSinalToolStripMenuItem";
+            ImportarSinalToolStripMenuItem.Size = new Size(180, 22);
+            ImportarSinalToolStripMenuItem.Text = "Importar Sinal";
+            ImportarSinalToolStripMenuItem.Click += ImportarSinalToolStripMenuItem_Click;
+            // 
             // SignalFilteringView
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -91,8 +118,11 @@
             Controls.Add(LowCutoffTextBox);
             Controls.Add(HighCutoffHzLabel);
             Controls.Add(LowCutoffHzLabel);
+            Controls.Add(menuStrip1);
             Name = "SignalFilteringView";
             Size = new Size(800, 600);
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -104,5 +134,8 @@
         private TextBox LowCutoffTextBox;
         private TextBox HighCutoffTextBox;
         private ScottPlot.FormsPlot Plot;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem menuToolStripMenuItem;
+        private ToolStripMenuItem ImportarSinalToolStripMenuItem;
     }
 }

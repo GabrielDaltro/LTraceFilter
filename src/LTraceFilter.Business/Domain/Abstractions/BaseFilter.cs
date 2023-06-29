@@ -41,8 +41,8 @@ namespace LTraceFilter.Business.Domain.Abstractions
         public BaseFilter(double cutoffFrequency, int samplingRate, Tfilter wrappedFilter)
         {
             this.wrappedFilter = wrappedFilter;
-            this.cutoffFrequency = cutoffFrequency;
-            this.samplingRate = samplingRate;
+            this.CutoffFrequency = cutoffFrequency;
+            this.SamplingRate = samplingRate;
         }
 
         public float[] Apply(float[] inputSignal)

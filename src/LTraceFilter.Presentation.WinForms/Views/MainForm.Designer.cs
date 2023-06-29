@@ -35,9 +35,9 @@
             // BasePanel
             // 
             BasePanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            BasePanel.Location = new Point(12, 12);
+            BasePanel.Location = new Point(2, 1);
             BasePanel.Name = "BasePanel";
-            BasePanel.Size = new Size(760, 537);
+            BasePanel.Size = new Size(780, 559);
             BasePanel.TabIndex = 0;
             // 
             // MainForm

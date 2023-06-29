@@ -8,49 +8,66 @@ namespace LTraceFilter.Business.Application
     public class SignalFilteringAppService
     {
         private float[]? signal;
-        private int samplingRate;
+        private int? samplingRate;
 
         private readonly FilterFactory filterFactory;
         private readonly ISignalRepository signalRepository;
         private readonly IFilterSettingsRepository filterSettingsRepository;
-        
+        private readonly ISignalReader signalReader;
+
         private BandPassFilter? bandPassFilter;
         private ILowPassFilter? lowPassFilter;
         private IHighPassFilter? highPassFilter;
 
         public SignalFilteringAppService(ISignalRepository signalRepository, 
                                          FilterFactory filterFactory,
-                                         IFilterSettingsRepository filterSettingsRepository)
+                                         IFilterSettingsRepository filterSettingsRepository,
+                                         ISignalReader signalReader)
         {
             this.signalRepository = signalRepository;
             this.filterFactory = filterFactory;
             this.filterSettingsRepository = filterSettingsRepository;
+            this.signalReader = signalReader;
         }
 
-        // essa função é realmente necessária?
+        // TO DO: verificar se essa função precisa ser refatorada
         public void LoadSignal()
         {
             (signal, samplingRate) = signalRepository.GetSignal();
         }
 
-        public float[] FilterSignal(float? lowPassCutoffFrequency, float? highPassCutoffFrequency)
+        public void PersisteNewSignal(float[] newSignal, int sampleRate)
         {
-            if (signal == null)
-                throw new Exception("It is need to call LoadSignal method before calling FilterSignal method.");
-
-            filterSettingsRepository.SetBothCutoffFrequency(lowPassCutoffFrequency, highPassCutoffFrequency);
-
-            if (lowPassCutoffFrequency == null && highPassCutoffFrequency == null)
-                return signal;
-            else if (lowPassCutoffFrequency != null && highPassCutoffFrequency == null)
-                return FilterWithLowPass(lowPassCutoffFrequency.Value);
-            else if (lowPassCutoffFrequency == null && highPassCutoffFrequency != null)
-                return FilterWithHighPass(highPassCutoffFrequency.Value);
-            else
-                return FilterWithBandPass(lowPassCutoffFrequency!.Value, highPassCutoffFrequency!.Value);
+            signalRepository.UpdateSignal(newSignal, sampleRate);
         }
 
-        private float[] FilterWithLowPass(float lowPassCutoffFrequency)
+        public float[] ImportNewSignal(string path)
+        {
+            return signalReader.ReadSignalFromFile(path);
+        }
+
+        public (float[]? signal, int? sampleRate) FilterSignal(float? lowPassCutoffFrequency, float? highPassCutoffFrequency)
+        {
+            filterSettingsRepository.SetBothCutoffFrequency(lowPassCutoffFrequency, highPassCutoffFrequency);
+
+            if (signal == null || samplingRate == null)
+                return (null, null);
+
+            float[] signalResult;
+
+            if (lowPassCutoffFrequency == null && highPassCutoffFrequency == null)
+                signalResult = signal;
+            else if (lowPassCutoffFrequency != null && highPassCutoffFrequency == null)
+                signalResult = FilterWithLowPass(lowPassCutoffFrequency.Value, samplingRate.Value);
+            else if (lowPassCutoffFrequency == null && highPassCutoffFrequency != null)
+                signalResult = FilterWithHighPass(highPassCutoffFrequency.Value, samplingRate.Value);
+            else
+                signalResult = FilterWithBandPass(lowPassCutoffFrequency!.Value, highPassCutoffFrequency!.Value, samplingRate.Value);
+
+            return (signalResult, samplingRate);
+        }
+
+        private float[] FilterWithLowPass(float lowPassCutoffFrequency, int samplingRate)
         {
             if (lowPassFilter == null)
                 lowPassFilter = filterFactory.CreateLowPassFilter(lowPassCutoffFrequency, samplingRate);
@@ -62,7 +79,7 @@ namespace LTraceFilter.Business.Application
             return lowPassFilter.Apply(signal!);
         }
 
-        private float[] FilterWithHighPass(float highPassCutoffFrequency)
+        private float[] FilterWithHighPass(float highPassCutoffFrequency, int samplingRate)
         {
             if (highPassFilter == null)
                 highPassFilter = filterFactory.CreateHighPassFilter(highPassCutoffFrequency, samplingRate);
@@ -74,7 +91,7 @@ namespace LTraceFilter.Business.Application
             return highPassFilter.Apply(signal!);
         }
 
-        private float[] FilterWithBandPass(float lowPassCutoffFrequency, float highPassCutoffFrequency)
+        private float[] FilterWithBandPass(float lowPassCutoffFrequency, float highPassCutoffFrequency, int samplingRate)
         {
             if (bandPassFilter == null)
                 bandPassFilter = filterFactory.CreateBandPassFilter(lowPassCutoffFrequency, highPassCutoffFrequency, samplingRate);
