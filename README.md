@@ -1,5 +1,3 @@
-# LTraceFilter
-Repositório do software de filtragem desenvolvido para o processo seletivo da empresa LTrace
 
 ### Arquitetura
 - Buscou-se seguir os padrões arquiturais da clean-architecture e SOLID;
