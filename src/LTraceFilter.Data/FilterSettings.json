@@ -1,4 +1,4 @@
 {
-  "lowCutoffFrequency": 12,
-  "highCutoffFrequency": 30
+  "lowCutoffFrequency": null,
+  "highCutoffFrequency": null
 }
